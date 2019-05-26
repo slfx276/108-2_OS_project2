@@ -12,12 +12,12 @@ OS: Lunix 18.04 with **kernel version-4.14.25**
 To use it, please:   
 ```
 1.  change to super user   
-2.  execute "./compile.sh" to compile codes and install modules  
+2.  execute "$ sudo ./compile.sh" to compile codes and install modules  
 3.  follow the input instrutions in the spec,  
 
 i.e.  
-./master ../data/file1_in mmap  
-./slave ../data/file1_out fcntl 127.0.0.1  
+$ sudo ./master ../data/file1_in mmap  
+$ sudo ./slave ../data/file1_out fcntl 127.0.0.1  
 ```
 
 Make sure that you are under the path "./user_program" when you execute user programs.  
