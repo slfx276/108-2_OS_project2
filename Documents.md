@@ -13,14 +13,15 @@ Linux提供了記憶體映射函數 mmap，它把文件內容映射到一段記�
 <pre><code>void *mmap(void *start , size_t length , int prot
                         , int flags, int fd, off_t offsize);</code></pre>  
 
-* (Argument) start：  
+* (Argument) start：   
 指向欲 mapping 的 memory address，通常設為NULL，代表讓系統自動選定位址，核心會自己在進程位址空間中選擇合適的位址建立映射。映射成功後返回該位址。如果不是NULL，則給核心一個提示，應該從什麼位址開始映射，核心會選擇start之上的某個合適的位址開始映射。
 建立 mapping 後，**真正的映射位址通過返回值可以得到**。 
 <br>
-* (Argument) length：
+* (Argument) length：    
     將文件的多大長度映射到記憶體<br>
     <br>
-* (Argument) prot: 
+    
+* (Argument) prot:    
 mapping 區域的保護方法，例如：r/w only 等等。 
     > PROT_EXEC 映射區域可被執行
     > PROT_READ 映射區域可被讀取
@@ -28,19 +29,22 @@ mapping 區域的保護方法，例如：r/w only 等等。
     > PROT_NONE 映射區域不能存取 ...
 <br>
 
-* (Argument) flags: 
-    影響映射區域的各種特性。在調用mmap()時必須要指定MAP_SHARED 或MAP_PRIVATE。
+* (Argument) flags:   
+影響映射區域的各種特性。在調用mmap()時必須要指定MAP_SHARED 或MAP_PRIVATE。
     > MAP_FIXED 如果參數start所指的位址無法成功建立映射時，則放棄映射，不對位址做修正。通常不鼓勵用此旗標。
 MAP_SHARED 允許其他映射該文件的行程共享，對映射區域的寫入數據會複製回文件。
 MAP_PRIVATE 不允許其他映射該文件的行程共享，對映射區域的寫入操作會產生一個映射的複製(copy-on-write)，對此區域所做的修改不會寫回原文件。
 <br>
+
 * (Argument) fd:
 由 open() return 的文件描述符，代表要 mapping 到 memory 中的文件。
 <br>
+
 * (Argument) offset：
 從文件映射開始處的偏移量，通常為0，代表從文件最前方開始映射。
 offset必須是分頁大小的整數倍(在32位體系統結構上通常是4K)。
 <br>
+
 * return value:
 若映射成功則返回映射區的核心起始位址，否則返回MAP_FAILED(-1)，錯誤原因存於 errno .
 
