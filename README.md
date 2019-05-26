@@ -1,4 +1,5 @@
 This is the source code of operating system project2. [OS-project2](http://rswiki.csie.org/dokuwiki/courses:107_2:project_2)
+OS: Lunix 18.04 with kernel version-4.14.25
 
 `./master_device `: the device moudule for master server  
 `./slave_device ` : the device moudule for slave client  
