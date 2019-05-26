@@ -24,3 +24,21 @@ Make sure that you are under the path "./user_program" when you execute user pro
 Though the execution order of user program "master" and "slave" does not matter,  
 it is suggested to execute "master" first to get more precise transmission time.  
 
+## Project Notes:
+
+### 1.  two user programs:
+one for accessing the slave device (slave side) and the other for accessing the master device (master side),  
+  
+**slave-side program  :**
+> it first uses ioctl to set the IP address of master, then receives the data from slave device and writes all of them to the output file by specified method.
+  
+**master-side program  :**
+> read the input file by the specified method and send the data to the master device.
+
+### 2.  two kernel programs:  
+  
+one for receiving the data from master device, and transmit to user program (slave side),   
+one for receive the data from user program, and send to master device (master side).  
+  
+Once the transmission has completed, the programs will show the total transmission time, from device is opened to the device is closed. And display the size of the transferred file in both computers. All the parameters are passed to programs through standard input.
+
