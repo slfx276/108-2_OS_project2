@@ -85,6 +85,7 @@ static struct miscdevice master_dev = { // declare a structure
 	.name = "master_device",
 	.fops = &master_fops
 };
+
 /* create mmap_vm_ops with mmap_open and mmap_close */
 struct vm_operations_struct mmap_vm_ops = {
 	.open = mmap_open,
@@ -164,7 +165,7 @@ int master_open(struct inode *inode, struct file *filp)
 	return 0;
 }
 
-
+/* declare the action according to the ioctl_num */
 static long master_ioctl(struct file *file, unsigned int ioctl_num, unsigned long ioctl_param)
 {
 	long ret = -EINVAL;
@@ -178,7 +179,8 @@ static long master_ioctl(struct file *file, unsigned int ioctl_num, unsigned lon
 	p4d_t *p4d;
 	old_fs = get_fs();
 	set_fs(KERNEL_DS);
-
+	/* the most importance part of kernel device : */
+	/* declare the action according to the ioctl_num */
 	switch(ioctl_num){
 		case master_IOCTL_CREATESOCK:// create socket and accept a connection
 			sockfd_cli = kaccept(sockfd_srv, (struct sockaddr *)&addr_cli, &addr_len);
@@ -243,6 +245,7 @@ static int my_mmap(struct file *filp, struct vm_area_struct *vma)
 	}
 	vma->vm_ops = &mmap_vm_ops;
 	vma->vm_flags |= VM_RESERVED;
+	
 	/* assign the file private data to the vm private data */
 	vma->vm_private_data = filp->private_data;
 	return 0;

@@ -14,7 +14,14 @@
 
 // -------------------------------------------------------------------------------
 #define MAP_SIZE (PAGE_SIZE * 100)
-int min(int a, int b) { return a < b ? a : b; }
+
+int min(int a, int b) 
+{ 
+	if(a < b)
+		return a;
+	else
+		return b;
+}
 // -------------------------------------------------------------------------------
 
 int main (int argc, char* argv[])
@@ -25,13 +32,13 @@ int main (int argc, char* argv[])
 	char file_name[50];
 	char method[20];
 	char ip[20];
-	struct timeval start;
-	struct timeval end;
+	struct timeval start; // time struct
+	struct timeval end; // time struct
 	double trans_time; //calulate the time between the device is opened and it is closed
 	char *kernel_address, *file_address;
 
 	/**/
-	void *mapped_mem, *kernel_mem;
+	void *file_mem_mapped, *kernel_mem_mapped;
 
 	// get "file name" , "fcntl or mmap method" , "ip"
 	/* 3 arguments */
@@ -40,7 +47,7 @@ int main (int argc, char* argv[])
 	strcpy(ip, argv[3]);
 
 	// dev_fd : file description from open() function.
-	if( (dev_fd = open("/dev/slave_device", O_RDWR)) < 0)//should be O_RDWR for PROT_WRITE when mmap()
+	if( (dev_fd = open("/dev/slave_device", O_RDWR)) < 0) // should be O_RDWR for PROT_WRITE when mmap()
 	{
 		perror("failed to open /dev/slave_device\n");
 		return 1;
@@ -64,7 +71,7 @@ int main (int argc, char* argv[])
 
 	switch(method[0])
 	{
-		case 'f'://fcntl : read()/write()
+		case 'f': // fcntl : read()/write()
 			do
 			{
 				ret = read(dev_fd, buf, sizeof(buf)); // read from the the device
@@ -78,14 +85,17 @@ int main (int argc, char* argv[])
 			do
 			{
 				posix_fallocate(file_fd, file_size, MAP_SIZE);
-				mapped_mem = mmap(NULL, MAP_SIZE, PROT_WRITE, MAP_SHARED, file_fd, file_size);
-				kernel_mem = mmap(NULL, MAP_SIZE, PROT_READ, MAP_SHARED, dev_fd, 0);
-				ret = ioctl(dev_fd, 0x12345678);
-				memcpy(mapped_mem, kernel_mem, ret);
+
+				file_mem_mapped = mmap(NULL, MAP_SIZE, PROT_WRITE, MAP_SHARED, file_fd, file_size);
+				kernel_mem_mapped = mmap(NULL, MAP_SIZE, PROT_READ, MAP_SHARED, dev_fd, 0);
+
+				ret = ioctl(dev_fd, 0x12345678); // slave_IOCTL_MMAP == 0x12345678
+				memcpy(file_mem_mapped, kernel_mem_mapped, ret);
 				file_size += ret;
 			} while(ret > 0);
+
 			ftruncate(file_fd, file_size);
-			ioctl(dev_fd, 0x111, kernel_mem);
+			ioctl(dev_fd, 0x111, kernel_mem_mapped);
 			
 			break;
 		// -------------------------------------------------------------------------------

@@ -132,6 +132,7 @@ int slave_open(struct inode *inode, struct file *filp)
 	return 0;
 }
 
+/* declare the action according to the ioctl_num */
 static long slave_ioctl(struct file *file, unsigned int ioctl_num, unsigned long ioctl_param)
 {
 	long ret = -EINVAL;
@@ -155,9 +156,12 @@ static long slave_ioctl(struct file *file, unsigned int ioctl_num, unsigned long
 
 	// -------------------------------------------------------------------------------
 	p4d_t *p4d;
-    printk("slave device ioctl");
+    // printk("slave device ioctl");
+	
 	// -------------------------------------------------------------------------------
 
+	/* the most importance part of kernel device : */
+	/* declare the action according to the ioctl_num */
 	switch(ioctl_num){
 		case slave_IOCTL_CREATESOCK:// create socket and connect to master
             printk("slave device ioctl create socket");
@@ -189,7 +193,7 @@ static long slave_ioctl(struct file *file, unsigned int ioctl_num, unsigned long
 			printk("connected to : %s %d\n", tmp, ntohs(addr_srv.sin_port));
 			kfree(tmp);
 			/**/
-			printk("kfree(tmp)");
+			// printk("kfree(tmp)");
 
 			ret = 0;
 			break;

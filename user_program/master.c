@@ -15,26 +15,34 @@
 /**/
 #define MAP_SIZE (PAGE_SIZE * 10)
 
-size_t get_filesize(const char* filename); // get the size of the input file
+size_t get_file_size(const char* filename); // get the size of the input file
 
 /**/
-int min(int a, int b) { return a < b ? a : b; }
+int min(int a, int b) 
+{ 
+	if(a < b)
+		return a;
+	else
+		return b;
+}
 
 
 int main (int argc, char* argv[])
 {
 	char buf[BUF_SIZE];
-	int i, j, dev_fd, file_fd;// the fd for the device and the fd for the input file
+	int i, j, dev_fd, file_fd; // the fd for the device and the fd for the input file
 	size_t ret, file_size, offset = 0, tmp;
 	char file_name[50], method[20];
 	char *kernel_address = NULL, *file_address = NULL;
-	struct timeval start;
-	struct timeval end;
+	struct timeval start; // time struct
+	struct timeval end; // timr struct
 	double trans_time; //calulate the time between the device is opened and it is closed
 
 	// -------------------------------------------------------------------------------
-	void *mapped_mem, *kernel_mem;
+
+	void *file_mem_mapped, *kernel_mem_mapped;
 	int len;
+
 	// -------------------------------------------------------------------------------
 
 	// get "file name" , "fcntl or mmap method" .
@@ -43,34 +51,37 @@ int main (int argc, char* argv[])
 	strcpy(file_name, argv[1]);
 	strcpy(method, argv[2]);
 
-
+	/* open master device */
 	if( (dev_fd = open("/dev/master_device", O_RDWR)) < 0)
 	{
 		perror("failed to open /dev/master_device\n");
 		return 1;
 	}
 	gettimeofday(&start ,NULL);
+
+	/* open file */
 	if( (file_fd = open (file_name, O_RDWR)) < 0 )
 	{
 		perror("failed to open input file\n");
 		return 1;
 	}
 
-	if( (file_size = get_filesize(file_name)) < 0)
+	/* calculate file size in bits ? */
+	if( (file_size = get_file_size(file_name)) < 0)
 	{
 		perror("failed to get filesize\n");
 		return 1;
 	}
 
 
-	if(ioctl(dev_fd, 0x12345677) == -1) //0x12345677 : create socket and accept the connection from the slave
+	if(ioctl(dev_fd, 0x12345677) == -1) // 0x12345677 : create socket and accept the connection from the slave
 	{
 		perror("ioclt server create socket error\n");
 		return 1;
 	}
 
 
-	switch(method[0])
+	switch(method[0]) // (argument) input method
 	{
 		case 'f': // fcntl : read()/write()
 			do
@@ -80,21 +91,23 @@ int main (int argc, char* argv[])
 			}while(ret > 0);
 			break;
 		// -------------------------------------------------------------------------------
-		case 'm': // mmap ?
+		case 'm': // mmap 
 			for (i = 0; i < file_size; i += MAP_SIZE)
 			{
 				len = min(MAP_SIZE, file_size - i);
-				mapped_mem = mmap(NULL, len, PROT_READ, MAP_SHARED, file_fd, i);
-				kernel_mem = mmap(NULL, len, PROT_READ|PROT_WRITE, MAP_SHARED, dev_fd, i);
-				memcpy(kernel_mem, mapped_mem, len);
-				ioctl(dev_fd, 0x12345678, len);
+
+				file_mem_mapped = mmap(NULL, len, PROT_READ, MAP_SHARED, file_fd, i);
+				kernel_mem_mapped = mmap(NULL, len, PROT_READ|PROT_WRITE, MAP_SHARED, dev_fd, i);
+
+				memcpy(kernel_mem_mapped, file_mem_mapped, len); // copy from file_mem_mapped to kernel_mem_mapped
+				ioctl(dev_fd, 0x12345678, len); // master_IOCTL_MMAP == 0x12345678
 			}
-			ioctl(dev_fd, 0x111, kernel_mem);
+			
+			ioctl(dev_fd, 0x111, kernel_mem_mapped);
 			break;
 		// -------------------------------------------------------------------------------
 	}
-
-	if(ioctl(dev_fd, 0x12345679) == -1) // end sending data, close the connection
+	if(ioctl(dev_fd, 0x12345679) == -1) // end sending data, close the connection ,master_IOCTL_EXIT == 0x12345679
 	{
 		perror("ioclt server exits error\n");
 		return 1;
@@ -110,9 +123,11 @@ int main (int argc, char* argv[])
 	return 0;
 }
 
-size_t get_filesize(const char* filename)
+size_t get_file_size(const char* filename)
 {
     struct stat st;
+
+	/* Get file attributes for FILE and put them in BUF.  */
     stat(filename, &st);
     return st.st_size;
 }
