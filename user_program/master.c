@@ -43,6 +43,8 @@ int main (int argc, char* argv[])
 	void *file_mem_mapped, *kernel_mem_mapped;
 	int len;
 
+	struct timeval exclude_wating;
+
 	// -------------------------------------------------------------------------------
 
 	// get "file name" , "fcntl or mmap method" .
@@ -60,7 +62,7 @@ int main (int argc, char* argv[])
 	gettimeofday(&start ,NULL);
 
 	/* open file */
-	if( (file_fd = open (file_name, O_RDWR)) < 0 )
+	if( (file_fd = open(file_name, O_RDWR)) < 0 )
 	{
 		perror("failed to open input file\n");
 		return 1;
@@ -80,6 +82,11 @@ int main (int argc, char* argv[])
 		return 1;
 	}
 
+	/* waiting above */
+
+
+	// debug
+	gettimeofday(&exclude_wating ,NULL);
 
 	switch(method[0]) // (argument) input method
 	{
@@ -103,10 +110,14 @@ int main (int argc, char* argv[])
 				ioctl(dev_fd, 0x12345678, len); // master_IOCTL_MMAP == 0x12345678
 			}
 			
+
+
 			ioctl(dev_fd, 0x111, kernel_mem_mapped);
+
 			break;
 		// -------------------------------------------------------------------------------
 	}
+
 	if(ioctl(dev_fd, 0x12345679) == -1) // end sending data, close the connection ,master_IOCTL_EXIT == 0x12345679
 	{
 		perror("ioclt server exits error\n");
@@ -116,6 +127,8 @@ int main (int argc, char* argv[])
 	gettimeofday(&end, NULL);
 	trans_time = (end.tv_sec - start.tv_sec)*1000 + (end.tv_usec - start.tv_usec)*0.0001;
 	printf("Master: Transmission time: %lf ms, File size: %ld bytes\n", trans_time, file_size / 8);
+	// debug
+	printf("Master take off waiting time: \nTransmission time: %lf ms, File size: %ld bytes\n", (end.tv_sec - exclude_wating.tv_sec)*1000 + (end.tv_usec - exclude_wating.tv_usec)*0.0001, file_size / 8);
 
 	close(file_fd);
 	close(dev_fd);

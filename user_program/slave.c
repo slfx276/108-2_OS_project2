@@ -39,6 +39,7 @@ int main (int argc, char* argv[])
 
 	/**/
 	void *file_mem_mapped, *kernel_mem_mapped;
+	struct timeval exclude_wating;
 
 	// get "file name" , "fcntl or mmap method" , "ip"
 	/* 3 arguments */
@@ -68,6 +69,12 @@ int main (int argc, char* argv[])
 	}
 
     write(1, "ioctl success\n", 14);
+
+	/* waiting above */
+
+
+	// correct time ?
+	gettimeofday(&exclude_wating ,NULL);
 
 	switch(method[0])
 	{
@@ -111,7 +118,8 @@ int main (int argc, char* argv[])
 	gettimeofday(&end, NULL);
 	trans_time = (end.tv_sec - start.tv_sec)*1000 + (end.tv_usec - start.tv_usec)*0.0001;
 	printf("Slave: Transmission time: %lf ms, File size: %ld bytes\n", trans_time, file_size / 8);
-
+	// debug
+	printf("Slave take off waiting time: \nTransmission time: %lf ms, File size: %ld bytes\n", (end.tv_sec - exclude_wating.tv_sec)*1000 + (end.tv_usec - exclude_wating.tv_usec)*0.0001, file_size / 8);
 
 	close(file_fd);
 	close(dev_fd);
