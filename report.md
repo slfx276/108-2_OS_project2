@@ -1,17 +1,30 @@
 ## 1. Design
 
+a. two user programs:
+one for accessing the slave device (slave side) and the other for accessing the master device (master side),
 
+> slave-side program :  
+    it first uses ioctl to set the IP address of master, then receives the data from slave device and writes all of them to the output file by specified method.
+
+> master-side program :  
+read the input file by the specified method and send the data to the master device.
+
+b. two kernel programs:
+> one for receiving the data from master device, and transmit to user program (slave side),  
+one for receive the data from user program, and send to master device (master side).
+
+Once the transmission has completed, the programs will show the total transmission time, from device is opened to the device is closed. And display the size of the transferred file in both computers. All the parameters are passed to programs through standard input.
 
 
 
 ## 2. Results
 
-### a. Master: fcntl ,  Slave: fcntl
+### a. Master: mmap ,  Slave: mmap
 
 ```
 // file1_in
 Master:
-Transmission time: 0.0.002800 ms, File size: 4 bytes
+Transmission time: 0.002800 ms, File size: 4 bytes
 Slave:
 Transmission time: 0.031800 ms, File size: 4 bytes
 
