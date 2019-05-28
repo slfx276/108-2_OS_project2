@@ -1,4 +1,4 @@
-## 1. Design
+# 1. Design
 
 ### a. two user programs:  
 one for accessing the slave device (slave side) and the other for accessing the master device (master side),
@@ -23,7 +23,7 @@ Once the transmission has completed, the programs will show the total transmissi
 
 
 
-## 2. Results
+# 2. Results
 
 ### a. Master: mmap ,  Slave: mmap
 
@@ -140,7 +140,7 @@ Transmission time: 7.888200 ms, File size: 1502860 bytes
 ```
 
 
-## 3. Comparison file I/O and memory-mapped I/O
+# 3. Comparison file I/O and memory-mapped I/O
 
 觀察實驗結果發現：  
   
@@ -154,5 +154,5 @@ c.  Master side 和 Slave side 都使用 fcntl 時，Slave 的時間大增。
   
 實驗結果可能跟不同的電腦設備有關，假如電腦的記憶體太小的話使用 memory mmaped 存取檔案時可能會造成大量的 page fault，多出許多處理 page fault 的時間而使得速度的快慢有不同的結果。
 
-## 4. work list  
+# 4. work list  
 r07922099 – 研究 ioctl()、mmap()、trace code …
