@@ -85,7 +85,7 @@ int main (int argc, char* argv[])
 	/* waiting above */
 
 
-	// debug
+	// correct time ?
 	gettimeofday(&exclude_wating ,NULL);
 
 	switch(method[0]) // (argument) input method
