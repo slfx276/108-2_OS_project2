@@ -99,9 +99,9 @@ Transmission time: 0.116700 ms, File size: 9695 bytes
 
 // file4_in
 Master:
-Transmission time: 22.828100 ms, File size: 1502860 bytes
+Transmission time: 3.697800 ms, File size: 1502860 bytes
 Slave:
-segmentation fault QQ
+segmentation fault 3.901300 ms, File size: 1502860 bytes
 
 ```
 
@@ -128,9 +128,9 @@ Transmission time: 0.096900 ms, File size: 9695 bytes
 
 // file4_in
 Master:
-Transmission time: 4.150200 ms, File size: 1502860 bytes
+Transmission time: 3.556600 ms, File size: 1502860 bytes
 Slave:
-Transmission time: 1985.619700 ms, File size: 1502860 bytes
+Transmission time: 7.888200 ms, File size: 1502860 bytes
 ```
 
 
