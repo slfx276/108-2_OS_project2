@@ -134,9 +134,20 @@ Transmission time: 1985.619700 ms, File size: 1502860 bytes
 ```
 
 
-## 3. Comparison
+## 3. Comparison file I/O and memory-mapped I/O
 
+觀察實驗結果發現：  
+  
+a.  兩邊都用 mmap 的時候傳輸最快。  
+>  可能使用 memory-mapped I/O 不需要使用大量的I/O指令，尤其在檔案大的時候可以直接透過對記憶體存取來處理file。  
 
+b.  檔案大時，Master side 使用 mmap 明顯較許多。  
+>  可能原因如上，memory mapped 可把檔案當成記憶體來用，直接使用指標來操作，達成高速的檔案存取，以 kernel 讀寫取代 I/O 讀寫。  
+
+c.  Slave side 使用 mmap 或 fcntl 的時間快慢不一定。  
+d.  Master side 和 Slave side 都使用 fcntl 的 result 發現 Slave 的時間大增。  
+  
+實驗結果可能跟不同的電腦設備有關，假如電腦的記憶體太小的話使用 memory mmaped 存取檔案時可能會造成大量的 page fault，多出許多處理 page fault 的時間而使得速度的快慢有不同的結果。
 
 ## 4. work list  
 r07922099 – 研究 ioctl()、mmap()、trace code …
