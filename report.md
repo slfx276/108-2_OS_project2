@@ -1,6 +1,6 @@
 ## 1. Design
 
-a. two user programs:
+### a. two user programs:  
 one for accessing the slave device (slave side) and the other for accessing the master device (master side),
 
 > slave-side program :  
@@ -9,11 +9,17 @@ one for accessing the slave device (slave side) and the other for accessing the 
 > master-side program :  
 read the input file by the specified method and send the data to the master device.
 
-b. two kernel programs:
+### b. two kernel programs:  
 > one for receiving the data from master device, and transmit to user program (slave side),  
 one for receive the data from user program, and send to master device (master side).
 
 Once the transmission has completed, the programs will show the total transmission time, from device is opened to the device is closed. And display the size of the transferred file in both computers. All the parameters are passed to programs through standard input.
+
+### modify Master transmission time 
+另外特別修改了 sample code 中 master.c 的 transmission time 計算方式，take off waiting time 以去除 master 和 slave 間隔執行時間的影響，因此這個 project 建議**先執行 master 再執行 slave**。
+
+### Segmentation fault
+有時候執行的時候 slave 端會出現 Segmentation fault，經過檢查 pointer 和 array 後仍偶爾會遇到，只能重新執行 master/slave，目前還沒找出確切原因 QQ
 
 
 
@@ -144,8 +150,7 @@ a.  兩邊都用 mmap 的時候傳輸最快。
 b.  檔案大時，Master side 使用 mmap 明顯較許多。  
 >  可能原因如上，memory mapped 可把檔案當成記憶體來用，直接使用指標來操作，達成高速的檔案存取，以 kernel 讀寫取代 I/O 讀寫。  
 
-c.  Slave side 使用 mmap 或 fcntl 的時間快慢不一定。  
-d.  Master side 和 Slave side 都使用 fcntl 的 result 發現 Slave 的時間大增。  
+c.  Master side 和 Slave side 都使用 fcntl 時，Slave 的時間大增。  
   
 實驗結果可能跟不同的電腦設備有關，假如電腦的記憶體太小的話使用 memory mmaped 存取檔案時可能會造成大量的 page fault，多出許多處理 page fault 的時間而使得速度的快慢有不同的結果。
 
