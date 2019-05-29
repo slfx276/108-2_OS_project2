@@ -1,6 +1,6 @@
 # 1. Design
 
-### a. two user programs:  
+### a. two User Programs:  
 one for accessing the slave device (slave side) and the other for accessing the master device (master side),
 
 > slave-side program :  
@@ -9,7 +9,7 @@ one for accessing the slave device (slave side) and the other for accessing the 
 > master-side program :  
 read the input file by the specified method and send the data to the master device.
 
-### b. two kernel programs:  
+### b. two Kernel Programs:  
 
 > master-side kernel :  
     receive the data from master-side user program, and send to master device (master side).  
