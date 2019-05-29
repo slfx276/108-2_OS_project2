@@ -10,10 +10,16 @@ one for accessing the slave device (slave side) and the other for accessing the 
 read the input file by the specified method and send the data to the master device.
 
 ### b. two kernel programs:  
-> one for receiving the data from master device, and transmit to user program (slave side),  
-one for receive the data from user program, and send to master device (master side).
 
-Once the transmission has completed, the programs will show the total transmission time, from device is opened to the device is closed. And display the size of the transferred file in both computers. All the parameters are passed to programs through standard input.
+> master-side kernel :  
+    receive the data from master-side user program, and send to master device (master side).  
+    
+> slave-side kernel :  
+    receive the data from master device, and transmit to user program (slave side), then slave-side user program will write to ouput file.  
+  
+
+
+Once the transmission has completed, the programs will show the total transmission time, from the time stamp when device is opened, to the time stamp when device is closed. And display the size of the transferred file in both computers. All the parameters are passed to programs through standard input.
 
 ### modify Master transmission time 
 另外特別修改了 sample code 中 master.c 的 transmission time 計算方式，take off waiting time 以去除 master 和 slave 間隔執行時間的影響，因此這個 project 建議**先執行 master 再執行 slave**。
