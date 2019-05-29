@@ -27,7 +27,7 @@ Once the transmission has completed, the programs will show the total transmissi
 ### Segmentation fault
 有時候執行的時候 slave 端會出現 Segmentation fault，經過檢查 pointer 和 array 後仍偶爾會遇到，只能重新執行 master/slave，目前還沒找出確切原因 QQ
 
-
+---
 
 # 2. Results
 
@@ -142,9 +142,10 @@ Transmission time: 0.096900 ms, File size: 9695 bytes
 Master:
 Transmission time: 3.556600 ms, File size: 1502860 bytes
 Slave:
-Transmission time: 7.888200 ms, File size: 1502860 bytes
+Transmission time: 7.888200 ms, File size: 1502860 bytes  
 ```
 
+---
 
 # 3. Comparison file I/O and memory-mapped I/O
 
@@ -159,6 +160,8 @@ b.  檔案大時，Master side 使用 mmap 明顯較許多。
 c.  Master side 和 Slave side 都使用 fcntl 時，Slave 的時間大增。  
   
 實驗結果可能跟不同的電腦設備有關，假如電腦的記憶體太小的話使用 memory mmaped 存取檔案時可能會造成大量的 page fault，多出許多處理 page fault 的時間而使得速度的快慢有不同的結果。
+
+---
 
 # 4. work list  
 r07922099 – 研究 ioctl()、mmap()、trace code …
