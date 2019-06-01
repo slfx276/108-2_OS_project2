@@ -1,6 +1,6 @@
 # 1. Design
 
-### a. two User Programs:  
+* a. two User Programs:  
 one for accessing the slave device (slave side) and the other for accessing the master device (master side),
 
 > slave-side program :  
@@ -9,7 +9,7 @@ one for accessing the slave device (slave side) and the other for accessing the 
 > master-side program :  
 read the input file by the specified method and send the data to the master device.
 
-### b. two Kernel Programs:  
+* b. two Kernel Programs:  
 
 > master-side kernel :  
     receive the data from master-side user program, and send to master device (master side).  
@@ -21,10 +21,10 @@ read the input file by the specified method and send the data to the master devi
 
 Once the transmission has completed, the programs will show the total transmission time, from the time stamp when device is opened, to the time stamp when device is closed. And display the size of the transferred file in both computers. All the parameters are passed to programs through standard input.
 
-### modify Master transmission time 
+* modify Master transmission time 
 另外特別修改了 sample code 中 master.c 的 transmission time 計算方式，take off waiting time 以去除 master 和 slave 間隔執行時間的影響，因此這個 project 建議**先執行 master 再執行 slave**。
 
-### Segmentation fault
+* Segmentation fault
 有時候執行的時候 slave 端會出現 Segmentation fault，經過檢查 pointer 和 array 後仍偶爾會遇到，只能重新執行 master/slave，目前還沒找出確切原因 QQ
 
 ---
